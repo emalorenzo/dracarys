@@ -1,40 +1,24 @@
 #!/usr/bin/env node
 
-const chalk       = require('chalk');
-const clear       = require('clear');
-const figlet      = require('figlet');
-
-const files = require('../lib/files');
-const generator = require('../lib/generator');
-
-console.log(
-  chalk.red(
-    figlet.textSync('Dracarys', { horizontalLayout: 'full' })
-  )
-);
-
-// if (files.directoryExists('.git')) {
-//   console.log(chalk.red('Already a git repository!'));
-//   process.exit();
-// }
-
+const chalk = require('chalk');
+const figlet = require('figlet');
+const { generateComponent, generateScreen } = require('../lib/generator');
 const inquirer  = require('../lib/inquirer');
 
 async function run() {
-  console.log(files.getCurrentDirectoryBase());
+  console.log(chalk.red(
+    figlet.textSync('Dracarys', { horizontalLayout: 'full' })
+  ));
   const { operation } = await inquirer.askOperation();
-  console.log(operation);
+  const { name } = await inquirer.askName();
+  const { path } = await inquirer.askPath();
 
-  switch(operation) {
-    case 'function-component': generator.createFile();
-    case 'class-component': generator.createFile();
-    case 'screen': handleGenerateScreen();
+  if (operation === 'screen') {
+    const { features } = await inquirer.askScreenFeatures();
+    generateScreen(operation, name, path, features);
+  } else {
+    generateComponent(operation, name, path);
   }
-}
-
-async function handleGenerateScreen() {
-  const { features } = await inquirer.askScreenFeatures();
-  console.log(features);
 }
 
 run();
