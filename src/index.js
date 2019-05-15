@@ -15,7 +15,7 @@ async function run() {
 
   if (operation === 'screen') {
     const { features } = await inquirer.askScreenFeatures();
-    generateScreen(operation, name, path, features);
+    generateScreen(name, path, features);
   } else {
     generateComponent(operation, name, path);
   }
